@@ -16,11 +16,11 @@ def generate_thumbnail(input_path, output_path, size=(200, 200), quality=85, pre
     try:
         with Image.open(input_path) as img:
             img.thumbnail(size)
-            
+
             # Modify the output file name with prefix and suffix
             base_name, ext = os.path.splitext(os.path.basename(output_path))
             output_path = os.path.join(os.path.dirname(output_path), f"{prefix}{base_name}{suffix}{ext}")
-            
+
             img.save(output_path, 'JPEG', quality=quality)
     except Exception as e:
         print(f"Error processing {input_path}: {e}")
@@ -29,7 +29,7 @@ def generate_thumbnail(input_path, output_path, size=(200, 200), quality=85, pre
 def process_directory(directory, thumb_dir_name, size, quality, prefix, suffix, clear_existing, progress_var, progress_label):
     total_files = 0
     processed_files = 0
-    
+
     for root, _, files in os.walk(directory):
         # Skip the _thumb directory
         if os.path.basename(root) == thumb_dir_name:
@@ -39,7 +39,7 @@ def process_directory(directory, thumb_dir_name, size, quality, prefix, suffix, 
         if os.path.exists(thumb_dir) and clear_existing == 1:
             shutil.rmtree(thumb_dir)
         os.makedirs(thumb_dir, exist_ok=True)
-        
+
         for file in files:
             if file.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
                 total_files += 1
@@ -90,12 +90,12 @@ def start_thumbnail_generation():
     suffix = entry_suffix.get()
     clear_existing = clear_existing_var.get()
     str_thumb_dir_name = entry_thumb_dir_name.get()
-    
+
     # Check if any of the input fields are empty
     if not directory or not width or not height or not quality:
         messagebox.showerror("Error", "Please fill in all input fields.")
         return
-    
+
     # Check if the entered directory exists
     if not os.path.exists(directory):
         messagebox.showerror("Error", "The selected directory does not exist.")
@@ -103,7 +103,7 @@ def start_thumbnail_generation():
 
     thumbnail_size = (int(width), int(height))
     thumbnail_quality = int(quality)
-    
+
     progress_var.set(0)
     processing_thread = threading.Thread(target=process_directory, args=(directory, str_thumb_dir_name, thumbnail_size, thumbnail_quality, prefix, suffix, clear_existing, progress_var, progress_label))
     processing_thread.start()
@@ -113,7 +113,7 @@ def start_thumbnail_generation():
             root.after(100, check_progress)
         else:
             messagebox.showinfo("Complete", "Thumbnail generation complete.")
-    
+
     root.after(100, check_progress)
 
 # Create a Tkinter root window
@@ -130,7 +130,7 @@ label_directory = ttk.Label(frame_directory, text="Select a directory:")
 label_directory.grid(row=0, column=0, sticky=tk.W, columnspan=2)
 
 selected_directory = tk.StringVar()
-entry_directory = ttk.Entry(frame_directory, textvariable=selected_directory,width=200)
+entry_directory = ttk.Entry(frame_directory, textvariable=selected_directory, width=200)
 entry_directory.grid(row=1, column=1, padx=5, pady=0, sticky=tk.W)
 
 def browse_directory():
@@ -193,9 +193,9 @@ entry_quality = ttk.Entry(frame_settings)
 entry_quality.grid(row=10, column=1, padx=15, pady=5)
 
 # Set default values for width, height, and quality
-entry_width.insert(0, "200")
-entry_height.insert(0, "200")
-entry_quality.insert(0, "85")
+entry_width.insert(0, "120")
+entry_height.insert(0, "120")
+entry_quality.insert(0, "80")
 
 # Progress bar
 progress_var = tk.IntVar()
